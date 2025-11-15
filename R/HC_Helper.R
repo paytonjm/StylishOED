@@ -38,7 +38,13 @@
 #' }
 
 #Going to try a hybrid of the map helper
-OED_Export_HiChart <- function(hc_chart, container_id = "hc_container") {
+OED_Export_HiChart <- function(
+  hc_chart, 
+  container_id = "hc_container",
+  .file = showPrompt("Output filename", "Save As", default = "chart_output"), 
+  .title = showPrompt("Chart title", "Enter chart title", default = "Example Chart"), 
+  .alt_text = showPrompt("Alt text", "Describe this chart", default = "Highcharts visualization."), 
+  .chart_num = showPrompt("Chart number", "Enter chart number", default = "1")) {
 
   # ---- Required packages ----
   required_pkgs <- c("highcharter", "jsonlite", "rstudioapi")
@@ -54,7 +60,7 @@ OED_Export_HiChart <- function(hc_chart, container_id = "hc_container") {
   lapply(required_pkgs, library, character.only = TRUE)
 
   #----------------------------------------------------------------
-
+ 
   # Support for JS_EVAL and injection
   clean_opts_for_js <- function(obj) {
     if (inherits(obj, "JS_EVAL")) {
@@ -65,12 +71,19 @@ OED_Export_HiChart <- function(hc_chart, container_id = "hc_container") {
       obj
     }
   }
-
+ 
   inject_js_literals <- function(json_txt) {
       out <- gsub('"JS_MARKER\\((function\\s*\\(.*?\\{[\\s\\S]*?\\})\\)"', '\\1', json_txt, perl = TRUE)
       out <- gsub("\\\\n", "\n", out, perl = TRUE)
       out
   }
+ 
+  if (!inherits(hc_chart, "highchart")) stop("Input must be a highchart object")
+ 
+  file <- .file
+  title <- .title
+  alt_text <- .alt_text
+  chart_num <- .chart_num
 
   if (!inherits(hc_chart, "highchart")) stop("Input must be a highchart object")
 
@@ -188,5 +201,6 @@ OED_Export_HiChart <- function(hc_chart, container_id = "hc_container") {
   writeLines(html, paste0(file, ".html"))
   message("✅ Exported interactive chart: ", file, " (container id = ", container_id, ")")
 }
+
 
 
