@@ -27,7 +27,7 @@
 #'   \item Supports multiple footnotes — appended with \code{<br>} tags automatically.
 #'   \item Enhanced error handling for user prompt cancellations.
 #'   \item Detects cells formatted as \emph{General} that contain dollar signs or percentages and assigns them to appropriate categories (currency, annual, employment, percentage, etc.).
-#'   \item Cleaned up percentages so it's 0 decimal places %###.
+#'   \item Cleaned up percentages so it's 1 decimal places %###.
 #' }
 #'
 #' @section Requirements:
@@ -61,15 +61,16 @@
 
 
 
-OED_HTML_Table <- function() {
+OED_HTML_Table <- function(
+	Excel_Table  = NA,
+  sheet_name   = NA,
+  ada_caption  = NA,
+  table_number = NA,
+  col_width_1  = NA,
+  output_name  = NA   # new argument
+) {
 
-  # --- HTML Table Maker with Grouped Header Support (Robust Merge Cell Handling + Bold + Indentation) ---
-
-  # ---------------------------------------
-  # Load or Install Libraries
-  # ---------------------------------------
-  #rm(list = ls()) # Clear workspace
-
+  # --- Load or Install Libraries ---
   check_and_load <- function(pkg) {
     if (!requireNamespace(pkg, quietly = TRUE)) install.packages(pkg)
     library(pkg, character.only = TRUE)
@@ -83,15 +84,10 @@ OED_HTML_Table <- function() {
   check_and_load("rstudioapi")
   check_and_load("xml2")
 
-  # ---------------------------------------
-  # User Inputs (unified error handling + explicit prompt names)
-  # ---------------------------------------
-
-  # Always return a single TRUE/FALSE; never NA
+  # --- Helper: treat NA / NULL / "" as blank ---
   is_blank_scalar <- function(x) {
     if (is.null(x)) return(TRUE)
     if (length(x) == 0) return(TRUE)
-    # coerce to single character safely
     x1 <- tryCatch(as.character(x)[1], error = function(e) NA_character_)
     if (is.na(x1)) return(TRUE)
     !nzchar(trimws(x1))
@@ -99,76 +95,94 @@ OED_HTML_Table <- function() {
 
   tryCatch({
 
-    # --- Choose Excel file ---
-    Excel_Table <- selectFile(caption = "Choose Excel file")
-    if (is_blank_scalar(Excel_Table)) stop("Canceled at prompt: Choose Excel file.")
-    Excel_Table <- gsub("\\\\", "/", Excel_Table)
+    # --- Excel file ---
+    if (is_blank_scalar(Excel_Table)) {
+      Excel_Table <- rstudioapi::selectFile(caption = "Choose Excel file")
+      if (is_blank_scalar(Excel_Table)) stop("Canceled at prompt: Choose Excel file.")
+      Excel_Table <- gsub("\\\\", "/", Excel_Table)
+    }
 
     # --- Load workbook & sheets ---
-    wb <- loadWorkbook(Excel_Table)
-    sheet_names <- getSheetNames(Excel_Table)
-    if (length(sheet_names) == 0) stop("No sheets found in the selected Excel file.")
+    wb <- openxlsx::loadWorkbook(Excel_Table)
 
-    # --- Sheet selection prompt ---
-    padded_sheet_names <- paste0("[", seq_along(sheet_names), "] ", sheet_names)
-    line_lengths <- nchar(padded_sheet_names)
-    padded_lines <- mapply(function(x, len) {
-      paste0(x, paste(rep("_", max(55 - len, 0)), collapse = ""), " ")
-    }, padded_sheet_names, line_lengths, USE.NAMES = FALSE)
+    # --- Sheet name ---
+    if (is_blank_scalar(sheet_name)) {
+      sheet_names <- openxlsx::getSheetNames(Excel_Table)
+      if (length(sheet_names) == 0) stop("No sheets found in the selected Excel file.")
 
-    sheet_question <- paste0(
-      "Please select a sheet by number:",
-      paste(rep("_", 54 - nchar("Please select a sheet by number:")), collapse = "")
-    )
-    sheet_prompt <- paste(sheet_question, paste(padded_lines, collapse = ""))
+      padded_sheet_names <- paste0("[", seq_along(sheet_names), "] ", sheet_names)
+      line_lengths <- nchar(padded_sheet_names)
+      padded_lines <- mapply(function(x, len) {
+        paste0(x, paste(rep("_", max(55 - len, 0)), collapse = ""), " ")
+      }, padded_sheet_names, line_lengths, USE.NAMES = FALSE)
 
-    sheet_index_raw <- showPrompt(title = "Sheet Name", message = sheet_prompt)
-    if (is_blank_scalar(sheet_index_raw)) stop("Canceled at prompt: Sheet Name (sheet number).")
+      sheet_question <- paste0(
+        "Please select a sheet by number:",
+        paste(rep("_", 54 - nchar("Please select a sheet by number:")), collapse = "")
+      )
+      sheet_prompt <- paste(sheet_question, paste(padded_lines, collapse = ""))
 
-    sheet_index <- suppressWarnings(as.integer(as.character(sheet_index_raw)[1]))
-    if (is.na(sheet_index) || sheet_index < 1 || sheet_index > length(sheet_names)) {
-      stop("Invalid sheet number at prompt: Sheet Name.")
+      sheet_index_raw <- rstudioapi::showPrompt(title = "Sheet Name", message = sheet_prompt)
+      if (is_blank_scalar(sheet_index_raw)) stop("Canceled at prompt: Sheet Name (sheet number).")
+
+      sheet_index <- suppressWarnings(as.integer(as.character(sheet_index_raw)[1]))
+      if (is.na(sheet_index) || sheet_index < 1 || sheet_index > length(sheet_names)) {
+        stop("Invalid sheet number at prompt: Sheet Name.")
+      }
+      sheet_name <- sheet_names[sheet_index]
     }
-    sheet_name <- sheet_names[sheet_index]
 
     # --- Accessibility Caption ---
-    ada_caption <- showPrompt(
-      title = "Accessibility Caption",
-      message = "Please enter the accessibility caption:"
-    )
-    if (is_blank_scalar(ada_caption)) stop("Canceled at prompt: Accessibility Caption.")
+    if (is_blank_scalar(ada_caption)) {
+      ada_caption <- rstudioapi::showPrompt(
+        title   = "Accessibility Caption",
+        message = "Please enter the accessibility caption:"
+      )
+      if (is_blank_scalar(ada_caption)) stop("Canceled at prompt: Accessibility Caption.")
+    }
 
     # --- Table Number ---
-    table_number <- showPrompt(
-      title   = "Table Number",
-      message = "If you have multiple tables, please indicate what table number this is:",
-      default = "1"
-    )
-    if (is_blank_scalar(table_number)) stop("Canceled at prompt: Table Number.")
+    if (is_blank_scalar(table_number)) {
+      table_number <- rstudioapi::showPrompt(
+        title   = "Table Number",
+        message = "If you have multiple tables, please indicate what table number this is:",
+        default = "1"
+      )
+      if (is_blank_scalar(table_number)) stop("Canceled at prompt: Table Number.")
+    }
 
     # --- First Column Width ---
-    col_width_1 <- showPrompt(
-      title   = "First Column Width",
-      message = "The default width of the first column is 220px. If you need to change it, you may select another width below. Otherwise click OK.",
-      default = "220"
-    )
-    if (is_blank_scalar(col_width_1)) stop("Canceled at prompt: First Column Width.")
+    if (is_blank_scalar(col_width_1)) {
+      col_width_1 <- rstudioapi::showPrompt(
+        title   = "First Column Width",
+        message = "The default width of the first column is 220px. If you need to change it, you may select another width below. Otherwise click OK.",
+        default = "220"
+      )
+      if (is_blank_scalar(col_width_1)) stop("Canceled at prompt: First Column Width.")
+    }
 
-    # --- Output filename ---
-    output_name <- showPrompt(
-      title   = "Output Filename",
-      message = "What do you want to call this table?__________________ (ex., output_table):"
-    )
-    if (is_blank_scalar(output_name)) stop("Canceled or blank at prompt: Output Filename.")
+    # --- Output path / name ---
+    # If output_path is not given, derive it from output_name (prompt if needed)
+    
+      if (is_blank_scalar(output_name)) {
+        output_name <- rstudioapi::showPrompt(
+          title   = "Output Filename",
+          message = "What do you want to call this table? (ex., output_table):"
+        )
+        if (is_blank_scalar(output_name)) stop("Canceled or blank at prompt: Output Filename.")
+      }
+      output_path <- file.path(dirname(Excel_Table), paste0(output_name, ".html"))
+    
 
-    output_path <- file.path(dirname(Excel_Table), paste0(output_name, ".html"))
+    # ... your actual table building code goes here ...
+    # use Excel_Table, sheet_name, ada_caption, table_number, col_width_1, output_path
 
   }, error = function(e) {
     message("\n--- Script terminated ---")
     message("Reason: ", conditionMessage(e))
     stop("User input process was canceled or invalid. Exiting gracefully.")
   })
-
+}
 
 
 
@@ -762,3 +776,4 @@ OED_HTML_Table <- function() {
   message("✅ HTML saved to: ", output_path)
 
   }
+
