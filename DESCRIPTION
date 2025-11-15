@@ -1,0 +1,22 @@
+Package: StylishOED
+Type: Package
+Title: Format tables and visualizations for QualityInfo.org
+Version: 0.12.0
+Authors@R: c(
+    person(
+      "Jason", "Payton",
+      email = "jason.m.payton@employ.oregon.gov",
+      role = c("aut", "cre")
+          ),
+    person(
+      "Luke", "Coury",
+      email = "jason.m.payton@employ.oregon.gov",
+      role = c("aut")
+          )      
+  )
+Description: This package is an internal resource to help expedite the development 
+    of HTML tables and Highcharts visualizations for QualityInfo.org.
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
