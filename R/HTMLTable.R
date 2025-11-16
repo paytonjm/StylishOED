@@ -119,7 +119,7 @@ OED_HTML_Table <- function(
     message("Reason: ", conditionMessage(e))
     stop("User input process was canceled or invalid. Exiting gracefully.")
   })
-}
+
 
 
 
@@ -713,5 +713,6 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
 
