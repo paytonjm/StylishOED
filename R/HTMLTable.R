@@ -1,66 +1,3 @@
-
-#' OED_HTML_Table
-#'
-#' Convert a formatted Excel table into an accessible HTML table for use on QualityInfo.org.
-#'
-#' @description
-#' This version of the **HTML Table Maker** has been upgraded with robust features for
-#' accessibility, formatting recognition, and multi-level table structures.
-#' Class structures and styling have been aligned to match what is found on QualityInfo.org main.css
-#'
-#'
-#' @details
-#' **Key upgrades include:**
-#' \itemize{
-#'   \item Screening and handling of nested titles — multiple levels of detail supported.
-#'   \item User-friendly prompts that display available sheets without opening Excel.
-#'   \item Prompt for naming the output file (no need to type \code{.html}).
-#'   \item Recognition and application of Excel bold formatting.
-#'   \item Recognition of indentation for hierarchical data (multiple levels supported).
-#'   \item Automatic detection of Excel cell formats, including currency, percentage, number, and annual.
-#'   \item Saves an HTML file styled for QualityInfo.org, with CSS classes integrated for OED management.
-#'   \item Adds skip logic and table numbering for improved screen reader accessibility.
-#'   \item User prompt for adjusting first column width.
-#'   \item Handles columns containing mixed formats.
-#'   \item Builds a \code{fmt_df} data frame internally for debugging/testing.
-#'   \item Removes blank rows following the source or footnote rows.
-#'   \item Supports multiple footnotes — appended with \code{<br>} tags automatically.
-#'   \item Enhanced error handling for user prompt cancellations.
-#'   \item Detects cells formatted as \emph{General} that contain dollar signs or percentages and assigns them to appropriate categories (currency, annual, employment, percentage, etc.).
-#'   \item Cleaned up percentages so it's 1 decimal places %###.
-#' }
-#'
-#' @section Requirements:
-#' \itemize{
-#'   \item Input must be a Microsoft Excel \code{.xlsx} file.
-#'   \item The data table and title should begin in column A1 (no helper columns).
-#'   \item Include a space between the end of the data and the source and footnote(s) you want included.
-#'   \item The script will look for formats (currency, percentage, employment).
-#'         You may also enter symbols within the cell, and it will recognize them as:
-#'         \itemize{
-#'           \item Employment
-#'           \item Currency (hourly)
-#'           \item Currency (annual)
-#'           \item Percentage
-#'           \item Text
-#'         }
-#' }
-#'
-#' @return
-#' A formatted HTML file is generated and saved in the same folder as the source Excel file.
-#'
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' # Launches user prompts and builds an HTML table
-#' #
-#' library(StylishOED)
-#' OED_HTML_Table()
-#' }
-
-
-
 OED_HTML_Table <- function(
 	Excel_Table  = NA,
   sheet_name   = NA,
@@ -776,4 +713,5 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
