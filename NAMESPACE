@@ -1,1 +1,47 @@
-exportPattern("^[[:alpha:]]+")
+# NAMESPACE for StylishOED (manual)
+
+# Functions you want visible to users
+export(OED_HTML_Table)
+export(OED_Export_HiChart)
+
+# Functions pulled from other packages -------------------------------
+
+# HTML building / writing
+importFrom(htmltools,
+  tags,
+  HTML,
+  htmlDependency,
+  tagList,
+  tagAppendChild,
+  save_html
+)
+
+# Excel I/O
+importFrom(openxlsx,
+  loadWorkbook,
+  getSheetNames,
+  read.xlsx
+)
+importFrom(readxl,
+  read_excel
+)
+
+# RStudio prompts / file dialogs
+importFrom(rstudioapi,
+  selectFile,
+  showPrompt
+)
+
+# XML parsing for styles / formats
+importFrom(xml2,
+  read_xml,
+  xml_ns,
+  xml_find_all,
+  xml_attr,
+  xml_find_first
+)
+
+# Small helpers from base packages
+importFrom(stats, setNames)
+
+
