@@ -16,8 +16,9 @@ Authors@R: c(
   )
 Description: This package is an internal resource to help expedite the development 
     of HTML tables and Highcharts visualizations for QualityInfo.org.
-License: file LICENSE
+License: file LICENSE + MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
+
 
