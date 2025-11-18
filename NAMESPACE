@@ -3,6 +3,7 @@
 # Functions you want visible to users
 export(OED_HTML_Table)
 export(OED_Export_HiChart)
+export(OED_MD_to_HTML)
 
 # Functions pulled from other packages -------------------------------
 
@@ -49,4 +50,5 @@ importFrom(knitr,
   rmarkdown
 )
   
+
 
