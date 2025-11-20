@@ -46,9 +46,9 @@ importFrom(xml2,
 importFrom(stats, setNames)
 
 # Create HTML from MD
-importFrom(knitr,
-  rmarkdown
-)
+importFrom(knitr, knit)
+importFrom(rmarkdown, render)
   
+
 
 
