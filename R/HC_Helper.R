@@ -1,4 +1,3 @@
-
 OED_Export_HiChart <- function(
     hc_chart,
     container_id = "hc_container",
@@ -156,5 +155,3 @@ OED_Export_HiChart <- function(
   writeLines(html, paste0(file, ".html"))
   message("✅ Exported interactive chart: ", file, " (container id = ", container_id, ")")
 }
-
-
