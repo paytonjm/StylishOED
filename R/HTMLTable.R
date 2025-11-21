@@ -453,15 +453,6 @@ OED_HTML_Table <- function(
         v <- fmt_map[key]
         catg <- if (is.na(v)) "text" else as.character(v)
 
-        # --- Suppression markers "-" and "-s-" should count as employment ---
-        # Do this only for data columns (j > 1), not the stub/label column
-if (j > 1 && is.character(val)) {
-  val_trim <- trimws(tolower(val))
-  if (val_trim %in% c("-", "-s-")) {
-    catg <- "employment"
-  }
-}  
-
         # --- Reclassify BEFORE setting the class (no new categories) ---
         # If Excel style is text/number but the user typed $ or %, promote to the right category
         if (j > 1 && catg %in% c("text", "employment") && is.character(val) && nzchar(trimws(val))) {
@@ -722,6 +713,7 @@ if (j > 1 && is.character(val)) {
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
 
 
