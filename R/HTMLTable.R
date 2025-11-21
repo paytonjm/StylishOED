@@ -291,7 +291,7 @@ OED_HTML_Table <- function(
       if (has_numeric_placeholders(norm_code) && !has_percent(norm_code)) return("employment")
       # date/time-ish (leave as text for your pipeline)
       if (grepl("[ymdhis]", tolower(norm_code))) return("text")
-      return("text")
+	  return("text")
     }
 
     # ---- Built-in formats ----
