@@ -454,10 +454,10 @@ OED_HTML_Table <- function(
         catg <- if (is.na(v)) "text" else as.character(v)
 
 	# --- Suppression markers "-" and "-s-" should count as employment ---
-    # Do this only for data columns (j > 1), not the stub/label column
+    # Do this only for data columns (j > 1), not the label column
     if (j > 1 && is.character(val)) {
     val_trim <- trimws(tolower(val))
-    if (val_trim %in% c("-", "-s-")) {
+    if (val_trim %in% c("-", "-s-", "N/A")) {
     catg <- "employment"
   }
 } 
@@ -722,6 +722,7 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
 
 
