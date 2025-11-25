@@ -291,7 +291,7 @@ OED_HTML_Table <- function(
       if (has_numeric_placeholders(norm_code) && !has_percent(norm_code)) return("employment")
       # date/time-ish (leave as text for your pipeline)
       if (grepl("[ymdhis]", tolower(norm_code))) return("text")
-      return("text")
+	  return("text")
     }
 
     # ---- Built-in formats ----
@@ -453,6 +453,15 @@ OED_HTML_Table <- function(
         v <- fmt_map[key]
         catg <- if (is.na(v)) "text" else as.character(v)
 
+	# --- Suppression markers "-" and "-s-" should count as employment ---
+    # Do this only for data columns (j > 1), not the label column
+    if (j > 1 && is.character(val)) {
+    val_trim <- trimws(tolower(val))
+    if (val_trim %in% c("-", "-s-", "N/A")) {
+    catg <- "employment"
+  }
+} 
+		  
         # --- Reclassify BEFORE setting the class (no new categories) ---
         # If Excel style is text/number but the user typed $ or %, promote to the right category
         if (j > 1 && catg %in% c("text", "employment") && is.character(val) && nzchar(trimws(val))) {
@@ -713,6 +722,8 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
+
 
 
 
