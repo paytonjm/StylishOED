@@ -4,6 +4,7 @@
 export(OED_HTML_Table)
 export(OED_Export_HiChart)
 export(OED_MD_to_HTML)
+export(OED_Colors)
 
 # Functions pulled from other packages -------------------------------
 
@@ -49,6 +50,7 @@ importFrom(stats, setNames)
 importFrom(knitr, knit)
 importFrom(rmarkdown, render)
   
+
 
 
 
