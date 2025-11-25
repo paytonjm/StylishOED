@@ -1,7 +1,5 @@
 OED_colors <- function(n = NULL, group = NULL, color = NULL) {
   # Full color palette (no "OED" prefix)
-OED_colors <- function(n = NULL, group = NULL) {
-  # Full color palette
   colors <- c(
     darkblue = "#1F4D70",
     darkblue75 = "#3078AE",
@@ -36,9 +34,6 @@ OED_colors <- function(n = NULL, group = NULL) {
     red = c("red"),
     orange = c("orange", "orange50", "orange25"),
     darkorange = c("darkorange")
-    pink = c("red", "pink", "pink75", "pink25"),
-    orange = c("darkorange", "orange", "orange50", "orange25"),
-    multiple = c("darkblue", "darkblue75", "darkblue50", "darkblue25", "orange25", "orange50", "orange", "darkorange", "red")
   )
 
   # Default order
@@ -61,7 +56,6 @@ OED_colors <- function(n = NULL, group = NULL) {
   }
 
   # Case 2: group selection
-  # Case 1: group is specified
   if (!is.null(group)) {
     if (!(group %in% names(groups))) {
       stop("Invalid group name. Valid groups are: ", paste(names(groups), collapse = ", "))
@@ -70,7 +64,6 @@ OED_colors <- function(n = NULL, group = NULL) {
     if (is.null(n)) return(unname(group_colors))
     if (n > length(group_colors)) {
       warning("Requested more colors than available in group. Returning all group colors.")
-      warning("Requested more colors than available in group. Returning all group colors. For a larger choice of colors for continious variables, choose 'group = continious'")
       return(unname(group_colors))
     }
     return(unname(group_colors[1:n]))
@@ -80,16 +73,11 @@ OED_colors <- function(n = NULL, group = NULL) {
   if (!is.null(n)) {
     if (n > length(palette)) {
       warning("Requested more colors than available. Returning all colors.")
-  # Case 2: n is specified without group
-  if (!is.null(n)) {
-    if (n > length(palette)) {
-      warning("Requested more colors than available. Returning all available colors.")
       return(unname(palette))
     }
     return(unname(palette[1:n]))
   }
 
   # Case 4: return full default palette
-  # Case 3: neither n nor group specified — return full default palette
   return(unname(palette))
 }
