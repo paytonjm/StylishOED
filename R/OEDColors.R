@@ -1,3 +1,23 @@
+#' ROED_colors: Retrieve OED-approved color palette
+#'
+#' This function provides access to the official OED (Oregon Employment Department) color palette,
+#' including individual colors, grouped color themes, or a default palette.
+#'
+#' @param n Optional. Number of colors to return. If `group` is specified, returns up to `n` colors from that group.
+#'          If neither `group` nor `color` is specified, returns the first `n` colors from the default palette.
+#' @param group Optional. A named group of colors. Valid groups include: `"darkblue"`, `"lightblue"`, `"teal"`, `"pink"`, `"red"`, `"orange"`, `"darkorange"`.
+#' @param color Optional. A specific color name. Returns the corresponding hex code.
+#'
+#' @return A character vector of hex color codes.
+#'
+#' @examples
+#' ROED_colors(5)  # First 5 colors from the default palette
+#' ROED_colors(group = "teal")  # All teal group colors
+#' ROED_colors(n = 2, group = "orange")  # First 2 orange colors
+#' ROED_colors(color = "darkblue")  # Hex code for darkblue
+#'
+#' @export
+
 OED_colors <- function(n = NULL, group = NULL, color = NULL) {
   # Full color palette (no "OED" prefix)
   colors <- c(
