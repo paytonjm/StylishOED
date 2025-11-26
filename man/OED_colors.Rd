@@ -6,23 +6,24 @@ This function provides access to the official OED (Oregon Employment Department)
 including individual colors, grouped color themes, or a default palette.
 }
 \usage{
-OED_colors(n = NULL, group = NULL, color = NULL)
+OED_colors(index = NULL, group = NULL, color = NULL)
 }
 \arguments{
-  \item{n}{
-    Optional. Number of colors to return. If \code{group} is specified, returns up to \code{n} colors from that group.
-    If neither \code{group} nor \code{color} is specified, returns the first \code{n} colors from the default palette.
+  \item{index}{
+    Optional. A numeric index to retrieve a specific color from the default palette or from a specified group.
+    If \code{group} is provided, the index refers to the position within that group.
+    If \code{group} is not provided, the index refers to the default palette.
   }
   \item{group}{
     Optional. A named group of colors. Valid groups include: \code{"darkblue"}, \code{"lightblue"}, \code{"teal"},
-    \code{"pink"}, \code{"red"}, \code{"orange"}, \code{"darkorange"}.
+    \code{"pink"}, \code{"orange"}, \code{"multi"}.
   }
   \item{color}{
     Optional. A specific color name. Returns the corresponding hex code.
   }
 }
 \value{
-A character vector of hex color codes.
+A character vector containing one or more hex color codes.
 }
 \details{
 The full OED color palette includes the following named colors and their hex codes.
@@ -58,8 +59,18 @@ The full OED color palette includes the following named colors and their hex cod
 }
 }
 \examples{
-OED_colors(5)
-OED_colors(group = "teal")
-OED_colors(n = 2, group = "orange")
+# Get a specific color by name
 OED_colors(color = "darkblue")
+
+# Get the 3rd color from the default palette
+OED_colors(index = 3)
+
+# Get all colors in the "teal" group
+OED_colors(group = "teal")
+
+# Get the 2nd color in the "orange" group
+OED_colors(index = 2, group = "orange")
+
+# Get all colors in the "multi" group
+OED_colors(group = "multi")
 }
