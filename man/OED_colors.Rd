@@ -25,38 +25,7 @@ OED_colors(n = NULL, group = NULL, color = NULL)
 A character vector of hex color codes.
 }
 \details{
-The full OED color palette includes the following named colors and their hex codes:
-
-\preformatted{
-darkblue      - #1F4D70
-darkblue75    - #3078AE
-darkblue50    - #7FB4DB
-darkblue25    - #BAD7EC
-lightbluedark - #36769A
-lightblue     - #61A3C8
-lightblue75   - #87B9D5
-lightblue50   - #BED9E8
-lightblue25   - #E0EDF4
-tealdark      - #275B54
-teal          - #3B8A7F
-teal75        - #64BCAF
-teal50        - #99C8C0
-teal25        - #D1EBE7
-red           - #D01220
-pink          - #F15B64
-pink75        - #F39AA3
-pink25        - #FCD8DB
-darkorange    - #BE750A
-orange        - #F39B16
-orange50      - #FBDBAB
-orange25      - #FDF1DF
-}
-}
-\examples{
-OED_colors(5)  # First 5 colors from the default palette
-OED_colors(group = "teal")  # All teal group colors
-OED_colors(n = 2, group = "orange")  # First 2 orange colors
-OED_colors(color = "darkblue")  # Hex code for darkblue
+The full OED color palette includes the following named colors and their hex codes.
 
 \if{html}{
   \out{
@@ -87,4 +56,10 @@ OED_colors(color = "darkblue")  # Hex code for darkblue
     <p><span class="swatch" style="background-color:#FDF1DF;"></span> orange25 - #FDF1DF</p>
   }
 }
+}
+\examples{
+OED_colors(5)
+OED_colors(group = "teal")
+OED_colors(n = 2, group = "orange")
+OED_colors(color = "darkblue")
 }
