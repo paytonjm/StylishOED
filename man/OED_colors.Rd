@@ -23,9 +23,6 @@ OED_colors(n = NULL, group = NULL, color = NULL)
 }
 \value{
 A character vector of hex color codes.
-
-\figure{figures/OED_Gradients.png}{options: width=80\%}
-
 }
 \examples{
 OED_colors(5)  # First 5 colors from the default palette
