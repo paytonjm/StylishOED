@@ -32,6 +32,6 @@ OED_colors(color = "darkblue")  # Hex code for darkblue
 
 # OED color palette preview (HTML only)
 \if{html}{
-  \figure{../man/figures/OED_Gradients.png}{options: width=80\%}
+  \out{<hr><p><strong>OED Color Palette Preview:</strong></p>
 }
 }
