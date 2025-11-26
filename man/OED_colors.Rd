@@ -31,4 +31,5 @@ OED_colors(n = 2, group = "orange")  # First 2 orange colors
 OED_colors(color = "darkblue")  # Hex code for darkblue
 }
 \if{html}{
-  \out{<hr><p><strong>OED Color Palette Preview:</strong></p>
+  \figure{figures/OED_Gradients.png}{options: width=80\%}
+}
