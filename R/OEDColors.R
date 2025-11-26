@@ -1,4 +1,4 @@
-OED_colors <- function(n = NULL, group = NULL, color = NULL) {
+OED_colors <- function(index = NULL, group = NULL, color = NULL) {
   # Full color palette (no "OED" prefix)
   colors <- c(
     darkblue = "#1F4D70",
@@ -30,10 +30,9 @@ OED_colors <- function(n = NULL, group = NULL, color = NULL) {
     darkblue = c("darkblue", "darkblue75", "darkblue50", "darkblue25"),
     lightblue = c("lightbluedark", "lightblue", "lightblue75", "lightblue50", "lightblue25"),
     teal = c("tealdark", "teal", "teal75", "teal50", "teal25"),
-    pink = c("pink", "pink75", "pink25"),
-    red = c("red"),
-    orange = c("orange", "orange50", "orange25"),
-    darkorange = c("darkorange")
+    pink = c("red", "pink", "pink75", "pink25"),
+    orange = c("orange", "orange50", "orange25", "darkorange"),
+    multi = c("darkblue", "lightbluedark", "lightblue", "lightblue75", "lightblue50", "lightblue25", "orange25", "orange50", "orange", "darkorange", "red")
   )
 
   # Default order
@@ -55,29 +54,29 @@ OED_colors <- function(n = NULL, group = NULL, color = NULL) {
     return(unname(colors[color]))
   }
 
-  # Case 2: group selection
+  # Case 2: Group selection (with or without index)
   if (!is.null(group)) {
     if (!(group %in% names(groups))) {
       stop("Invalid group name. Valid groups are: ", paste(names(groups), collapse = ", "))
     }
     group_colors <- colors[groups[[group]]]
-    if (is.null(n)) return(unname(group_colors))
-    if (n > length(group_colors)) {
-      warning("Requested more colors than available in group. Returning all group colors.")
-      return(unname(group_colors))
+    if (!is.null(index)) {
+      if (index < 1 || index > length(group_colors)) {
+        stop("Index out of range for group '", group, "'. Must be between 1 and ", length(group_colors), ".")
+      }
+      return(unname(group_colors[index]))
     }
-    return(unname(group_colors[1:n]))
+    return(unname(group_colors))
   }
 
-  # Case 3: default palette
-  if (!is.null(n)) {
-    if (n > length(palette)) {
-      warning("Requested more colors than available. Returning all colors.")
-      return(unname(palette))
+  # Case 3: Index from default palette
+  if (!is.null(index)) {
+    if (index < 1 || index > length(palette)) {
+      stop("Index out of range. Must be between 1 and ", length(palette), ".")
     }
-    return(unname(palette[1:n]))
+    return(unname(palette[index]))
   }
 
-  # Case 4: return full default palette
+  # Case 4: Return full default palette
   return(unname(palette))
 }
