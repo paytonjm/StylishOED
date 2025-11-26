@@ -29,7 +29,9 @@ OED_colors(5)  # First 5 colors from the default palette
 OED_colors(group = "teal")  # All teal group colors
 OED_colors(n = 2, group = "orange")  # First 2 orange colors
 OED_colors(color = "darkblue")  # Hex code for darkblue
-}
+
+# OED color palette preview (HTML only)
 \if{html}{
   \figure{figures/OED_Gradients.png}{options: width=80\%}
+}
 }
