@@ -30,6 +30,3 @@ OED_colors(group = "teal")  # All teal group colors
 OED_colors(n = 2, group = "orange")  # First 2 orange colors
 OED_colors(color = "darkblue")  # Hex code for darkblue
 }
-\if{html}{
-  \figure{figures/OED_Gradients.png}{options: width=80\%}
-}
