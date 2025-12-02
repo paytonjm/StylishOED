@@ -506,7 +506,7 @@ OED_HTML_Table <- function(
                             if (grepl("%\\s*$", original_text)) {
                               paste0(format(round(num_val,  1),nsmall=1), "%")      #it was 1, changed to 0 to round test
                             } else {
-                              paste0(format(round(num_val,  1),nsmall=1), "%")  #it was 1, changed to 0 to round test
+                              paste0(format(round(num_val*100,  1),nsmall=1), "%")  #it was 1, changed to 0 to round test
                             }
                           },
                           employment = formatC(num_val, format = "f", digits = 0, big.mark = ","),
@@ -732,6 +732,7 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
 
 
