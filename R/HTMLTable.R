@@ -449,6 +449,16 @@ OED_HTML_Table <- function(
         raw_val <- tidy_table[[i, j]]
         val <- as.character(raw_val)
 
+	# For data columns only (j > 1): treat NA / "" / "NA" as a blank cell
+     if (j > 1 && (is.na(raw_val) ||
+             !nzchar(trimws(val)) ||
+            identical(val, "NA"))) {
+   # keep numeric alignment class for data columns
+     td_tag <- tags$td(class = "atc-numeric-col", "")
+
+     return(td_tag)  # skip all further formatting for this cell
+      } 
+
         key <- paste(row_num, j, sep = ":")
         v <- fmt_map[key]
         catg <- if (is.na(v)) "text" else as.character(v)
@@ -496,7 +506,7 @@ OED_HTML_Table <- function(
                             if (grepl("%\\s*$", original_text)) {
                               paste0(format(round(num_val,  1),nsmall=1), "%")      #it was 1, changed to 0 to round test
                             } else {
-                              paste0(format(round(num_val,  1),nsmall=1), "%")  #it was 1, changed to 0 to round test
+                              paste0(format(round(num_val*100,  1),nsmall=1), "%")  #it was 1, changed to 0 to round test
                             }
                           },
                           employment = formatC(num_val, format = "f", digits = 0, big.mark = ","),
@@ -722,6 +732,8 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
+
 
 
 
