@@ -67,7 +67,11 @@ OED_HTML_Table <- function(
         stop("Invalid sheet number at prompt: Sheet Name.")
       }
       sheet_name <- sheet_names[sheet_index]
-    }
+    } else
+		{
+		sheet_names <- openxlsx::getSheetNames(Excel_Table)
+		sheet_index <- which(sheet_names == sheet_name)
+		}
 
     # --- Accessibility Caption ---
     if (is_blank_scalar(ada_caption)) {
@@ -732,6 +736,7 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
 
 
