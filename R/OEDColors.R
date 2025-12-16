@@ -1,7 +1,7 @@
 OED_colors <- function(index = NULL, group = NULL, color = NULL) {
   # Full color palette (no "OED" prefix)
   colors <- c(
-    OEDblue = "#003764", #add OED blue color
+    QIblue = "#003764", #add OED blue color
     darkblue = "#1F4D70",
     darkblue75 = "#3078AE",
     darkblue50 = "#7FB4DB",
@@ -31,7 +31,7 @@ OED_colors <- function(index = NULL, group = NULL, color = NULL) {
 
   # Manually defined groups
   groups <- list(
-    darkblue = c("OEDblue", "darkblue75", "darkblue50", "darkblue25"),
+    darkblue = c("QIblue", "darkblue75", "darkblue50", "darkblue25"),
     lightblue = c("lightbluedark", "lightblue", "lightblue75", "lightblue50", "lightblue25"),
     teal = c("darkteal", "teal", "teal75", "teal50", "teal25"),
     pink = c("red", "pink", "pink75", "pink25"),
@@ -43,7 +43,7 @@ OED_colors <- function(index = NULL, group = NULL, color = NULL) {
 
 
 default_order <- c(
-  "lightblue", "OEDblue", "lightgold", "teal",
+  "lightblue", "QIblue", "lightgold", "teal",
   "pink75", "darkteal", "darkorange", "teal50",
   "pink", "darkgray",
   "orange25", "lightblue25", "darkblue25", "orange50",
