@@ -1,6 +1,7 @@
 OED_colors <- function(index = NULL, group = NULL, color = NULL) {
   # Full color palette (no "OED" prefix)
   colors <- c(
+    OEDblue = "#003764", #add OED blue color
     darkblue = "#1F4D70",
     darkblue75 = "#3078AE",
     darkblue50 = "#7FB4DB",
@@ -10,7 +11,7 @@ OED_colors <- function(index = NULL, group = NULL, color = NULL) {
     lightblue75 = "#87B9D5",
     lightblue50 = "#BED9E8",
     lightblue25 = "#E0EDF4",
-    tealdark = "#275B54",
+    darkteal = "#275B54",
     teal = "#3B8A7F",
     teal75 = "#64BCAF",
     teal50 = "#99C8C0",
@@ -22,27 +23,35 @@ OED_colors <- function(index = NULL, group = NULL, color = NULL) {
     darkorange = "#BE750A",
     orange = "#F39B16",
     orange50 = "#FBDBAB",
-    orange25 = "#FDF1DF"
+    orange25 = "#FDF1DF",
+    lightgold = "#FFC85A",
+    lightgray = "#BFBFBF",
+    darkgray = "#7F7F7F"
   )
 
   # Manually defined groups
   groups <- list(
-    darkblue = c("darkblue", "darkblue75", "darkblue50", "darkblue25"),
+    darkblue = c("OEDblue", "darkblue75", "darkblue50", "darkblue25"),
     lightblue = c("lightbluedark", "lightblue", "lightblue75", "lightblue50", "lightblue25"),
-    teal = c("tealdark", "teal", "teal75", "teal50", "teal25"),
+    teal = c("darkteal", "teal", "teal75", "teal50", "teal25"),
     pink = c("red", "pink", "pink75", "pink25"),
     orange = c("orange", "orange50", "orange25", "darkorange"),
     multi = c("darkblue", "lightbluedark", "lightblue", "lightblue75", "lightblue50", "lightblue25", "orange25", "orange50", "orange", "darkorange", "red")
   )
 
   # Default order
-  default_order <- c(
-    "lightblue", "orange", "teal", "red", "pink",
-    "darkblue", "darkblue75", "darkblue50", "darkblue25",
-    "lightbluedark", "lightblue75", "lightblue50", "lightblue25",
-    "tealdark", "teal75", "teal50", "teal25",
-    "pink75", "pink25", "darkorange", "orange50", "orange25"
+
+
+default_order <- c(
+  "lightblue", "OEDblue", "lightgold", "teal",
+  "pink75", "darkteal", "darkorange", "teal50",
+  "pink", "darkgray",
+  "orange25", "lightblue25", "darkblue25", "orange50",
+  "lightgray", "red", "lightblue50", "pink25",
+  "darkblue", "lightbluedark", "darkblue75", "orange",
+  "teal25", "lightblue75", "teal75", "darkblue50"
   )
+
 
   palette <- colors[default_order]
 
