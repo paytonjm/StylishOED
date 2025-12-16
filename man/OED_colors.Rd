@@ -33,6 +33,7 @@ The full OED color palette includes the following named colors and their hex cod
     <style>
       .swatch { display: inline-block; width: 20px; height: 20px; margin-right: 8px; border: 1px solid #ccc; vertical-align: middle; }
     </style>
+    <p><span class="swatch" style="background-color:#003764;"></span> QIblue - #003764</p>
     <p><span class="swatch" style="background-color:#1F4D70;"></span> darkblue - #1F4D70</p>
     <p><span class="swatch" style="background-color:#3078AE;"></span> darkblue75 - #3078AE</p>
     <p><span class="swatch" style="background-color:#7FB4DB;"></span> darkblue50 - #7FB4DB</p>
@@ -55,6 +56,9 @@ The full OED color palette includes the following named colors and their hex cod
     <p><span class="swatch" style="background-color:#F39B16;"></span> orange - #F39B16</p>
     <p><span class="swatch" style="background-color:#FBDBAB;"></span> orange50 - #FBDBAB</p>
     <p><span class="swatch" style="background-color:#FDF1DF;"></span> orange25 - #FDF1DF</p>
+    <p><span class="swatch" style="background-color:#FFC85A;"></span> lightgold - #FFC85A</p>
+    <p><span class="swatch" style="background-color:#BFBFBF;"></span> lightgray - #BFBFBF</p>
+    <p><span class="swatch" style="background-color:#7F7F7F;"></span> darkgray - #7F7F7F</p>
   }
 }
 }
@@ -73,4 +77,27 @@ OED_colors(index = 2, group = "orange")
 
 # Get all colors in the "multi" group
 OED_colors(group = "multi")
+
+# Use with ggplot
+library(ggplot2)
+library(StylishOED)
+ 
+# Randomly generate data
+time_series_data <- data.frame(
+  Time = rep(1:50, times = 3),
+  Value = c(cumsum(rnorm(50)), cumsum(rnorm(50)), cumsum(rnorm(50))),
+  Series = rep(c("Series A", "Series B", "Series C"), each = 50)
+)
+ 
+# Use OED_colors() within scale_color_manual
+ggplot(time_series_data, aes(x = Time, y = Value, color = Series)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Randomly Generated Time Series",
+    x = "Time",
+    y = "Value",
+    color = "Series"
+  ) +
+  scale_color_manual(values = OED_colors()) +
+  theme_minimal()
 }
