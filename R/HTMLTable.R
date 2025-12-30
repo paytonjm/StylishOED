@@ -508,30 +508,63 @@ if (j > 1 && catg %in% c("text", "employment") && is.character(val) && nzchar(tr
           "atc-text-col"
         }
 
+
+		  
         # --- Numeric rendering using the (possibly updated) catg ---
-        if (j > 1 && catg %in% c("currency","annual","percentage","employment","decimal")) {
-          original_text <- val  # keep to detect literal '%' later
-          cleaned <- gsub("[,\\s\\$%]", "", val)
-          num_val <- suppressWarnings(as.numeric(cleaned))
-          if (!is.na(num_val)) {
-            val <- switch(catg,
-                          annual     = paste0("$", formatC(num_val, format = "f", digits = 0, big.mark = ",")),
-                          currency   = paste0("$", formatC(num_val, format = "f", digits = 2, big.mark = ",")),
-                          percentage = {
-                            # If original text contains a literal '%', do NOT scale (e.g., "12%")
-                            # Otherwise (true Excel % -> 0.12), scale by 100
-                            if (grepl("%\\s*$", original_text)) {
-                              paste0(format(round(num_val,  1),nsmall=1), "%")      #it was 1, changed to 0 to round test
-                            } else {
-                              paste0(format(round(num_val*100,  1),nsmall=1), "%")  #it was 1, changed to 0 to round test
-                            }
-                          },
-                          employment = formatC(num_val, format = "f", digits = 0, big.mark = ","),
-						  decimal = formatC(num_val, format = "f", digits = 1, big.mark = ","),
-                          val
-            )
-          }
+
+decimal_places_from_format <- function(code) {
+  if (is.na(code)) return(NA_integer_)
+  m <- regexec("\\.(0+|#+)", code)
+  hit <- regmatches(code, m)[[1]]
+  if (length(hit) == 0) return(0L)
+  nchar(hit[2])
+}		  
+ 
+		  if (j > 1 && catg %in% c("currency","annual","percentage","employment","decimal")) {
+
+  original_text <- val
+  cleaned <- gsub("[,\\s\\$%]", "", val)
+  num_val <- suppressWarnings(as.numeric(cleaned))
+
+  if (!is.na(num_val)) {
+
+    # Look up formatCode for this cell
+    fmt_row <- fmt_df[fmt_df$row == row_num & fmt_df$col == j, , drop = FALSE]
+    fmt_code <- if (nrow(fmt_row) == 1) fmt_row$formatCode else NA_character_
+
+    dec_places <- decimal_places_from_format(fmt_code)
+
+    val <- switch(catg,
+          annual =  paste0("$", formatC(num_val, format = "f", digits = 0, big.mark = ",")),
+        currency =  paste0("$", formatC(num_val, format = "f",digits = ifelse(is.na(dec_places), 2, dec_places), big.mark = ",")),
+      percentage = {
+        if (grepl("%\\s*$", original_text)) {
+          paste0(formatC(num_val, format = "f",
+                          digits = ifelse(is.na(dec_places), 1, dec_places)), "%")
+        } else {
+          paste0(formatC(num_val * 100, format = "f",
+                          digits = ifelse(is.na(dec_places), 1, dec_places)), "%")
         }
+      },
+
+      decimal =
+        formatC(num_val, format = "f",
+                digits = ifelse(is.na(dec_places), 1, dec_places),
+                big.mark = ","),
+
+      employment =
+        if (!is.na(dec_places) && dec_places > 0) {
+          formatC(num_val, format = "f",
+                  digits = dec_places, big.mark = ",")
+        } else {
+          formatC(num_val, format = "f", digits = 0, big.mark = ",")
+        },
+
+      val
+    )
+  }
+}
+
 
         td_tag <- tags$td(class = cell_class, val)
 
@@ -750,6 +783,7 @@ if (j > 1 && catg %in% c("text", "employment") && is.character(val) && nzchar(tr
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
 
 
