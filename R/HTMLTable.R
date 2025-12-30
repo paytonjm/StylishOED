@@ -476,27 +476,40 @@ OED_HTML_Table <- function(
   }
 } 
 		  
-        # --- Reclassify BEFORE setting the class (no new categories) ---
-        # If Excel style is text/number but the user typed $ or %, promote to the right category
-        if (j > 1 && catg %in% c("text", "employment") && is.character(val) && nzchar(trimws(val))) {
-          if (grepl("^\\s*\\$", val)) {
-            catg <- if (grepl("\\.\\d", val)) "currency" else "annual"
-          } else if (grepl("%\\s*$", val)) {
-            catg <- "percentage"
-          }
-        }
+# --- Reclassify BEFORE setting the class (no new categories except "decimal") ---
+# If Excel style is text/number but the user typed $, %, or a decimal, promote appropriately
+if (j > 1 && catg %in% c("text", "employment") && is.character(val) && nzchar(trimws(val))) {
+
+  val_trim <- trimws(val)
+
+  # Currency (explicit $)
+  if (grepl("^\\$", val_trim)) {
+    catg <- if (grepl("\\.[0-9]+", val_trim)) "currency" else "annual"
+
+  # Percentage (explicit %)
+  } else if (grepl("%$", val_trim)) {
+    catg <- "percentage"
+
+  # Decimal number (no $ or %, but contains a decimal point)
+  } else if (
+    grepl("^[0-9]+\\.[0-9]+$", val_trim) &&
+    !grepl("[%$]", val_trim)
+  ) {
+    catg <- "decimal"
+  }
+}
 
         # Choose the class from the (possibly updated) catg
         cell_class <- if (j == 1) {
           "atc-first-col"
-        } else if (catg %in% c("currency","annual","percentage","employment")) {
+        } else if (catg %in% c("currency","annual","percentage","employment","decimal")) {
           "atc-numeric-col"
         } else {
           "atc-text-col"
         }
 
         # --- Numeric rendering using the (possibly updated) catg ---
-        if (j > 1 && catg %in% c("currency","annual","percentage","employment")) {
+        if (j > 1 && catg %in% c("currency","annual","percentage","employment","decimal")) {
           original_text <- val  # keep to detect literal '%' later
           cleaned <- gsub("[,\\s\\$%]", "", val)
           num_val <- suppressWarnings(as.numeric(cleaned))
@@ -514,6 +527,7 @@ OED_HTML_Table <- function(
                             }
                           },
                           employment = formatC(num_val, format = "f", digits = 0, big.mark = ","),
+						  decimal = formatC(num_val, format = "f", digits = 1, big.mark = ","),
                           val
             )
           }
@@ -736,6 +750,7 @@ OED_HTML_Table <- function(
   message("✅ HTML saved to: ", output_path)
 
   }
+
 
 
 
